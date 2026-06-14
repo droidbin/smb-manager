@@ -1,0 +1,6 @@
+*.exe
+*.zip
+*.tmp.exe
+.build-logs/
+.admin-tools/
+
