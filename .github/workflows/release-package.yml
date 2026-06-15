@@ -76,3 +76,4 @@ jobs:
             gh release create "$VERSION" "$ZIP_PATH#${ZIP_NAME}" \
               --title "SMB Manager $VERSION" \
               --notes "Automated release for SMB Manager $VERSION."
+          fi
