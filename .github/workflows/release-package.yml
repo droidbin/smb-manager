@@ -74,6 +74,6 @@ jobs:
             gh release upload "$VERSION" "$ZIP_PATH#${ZIP_NAME}" --clobber
           else
             gh release create "$VERSION" "$ZIP_PATH#${ZIP_NAME}" \
-              --title "SMB Manager $VERSION" \
+              --title "$ZIP_NAME" \
               --notes "Automated release for SMB Manager $VERSION."
           fi
