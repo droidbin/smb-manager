@@ -1,0 +1,4 @@
+.admin-tools/
+.build-logs/
+*.tmp.exe
+*.log
