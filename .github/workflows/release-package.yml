@@ -1,0 +1,78 @@
+name: Release package
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/release-package.yml"
+      - "SMB Manager V*/version.ini"
+      - "SMB Manager V*.zip"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve package
+        id: package
+        shell: pwsh
+        run: |
+          $versionFiles = Get-ChildItem -Path . -Recurse -Filter version.ini |
+            Where-Object { $_.FullName -match 'SMB Manager V[^/\\]+[/\\]version\.ini$' } |
+            Sort-Object FullName -Descending
+
+          if (-not $versionFiles) {
+            throw "No version.ini file found under an SMB Manager version folder."
+          }
+
+          $versionFile = $versionFiles[0]
+          $version = $null
+          foreach ($line in Get-Content -LiteralPath $versionFile.FullName -Encoding UTF8) {
+            if ($line -match '^\s*Version\s*=\s*(.+?)\s*$') {
+              $version = $Matches[1].Trim()
+              break
+            }
+          }
+
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            throw "Version value was not found in $($versionFile.FullName)."
+          }
+
+          if (-not $version.StartsWith("V", [System.StringComparison]::OrdinalIgnoreCase)) {
+            $version = "V$version"
+          }
+
+          $zipName = "SMB Manager $version.zip"
+          $zip = Get-ChildItem -Path . -File -Filter $zipName | Select-Object -First 1
+          if (-not $zip) {
+            throw "Release package was not found: $zipName"
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "zip_path=$($zip.FullName)" >> $env:GITHUB_OUTPUT
+          "zip_name=$zipName" >> $env:GITHUB_OUTPUT
+
+      - name: Create or update GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.package.outputs.version }}
+          ZIP_PATH: ${{ steps.package.outputs.zip_path }}
+          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            gh release upload "$VERSION" "$ZIP_PATH#${ZIP_NAME}" --clobber
+          else
+            gh release create "$VERSION" "$ZIP_PATH#${ZIP_NAME}" \
+              --title "SMB Manager $VERSION" \
+              --notes "Automated release for SMB Manager $VERSION."
