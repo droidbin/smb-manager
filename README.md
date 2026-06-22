@@ -44,6 +44,10 @@ zip 파일을 내려받아 압축을 해제한 뒤 `Setup.exe`를 실행하면 �
 
 새 버전이 있으면 zip을 다운로드하고 압축을 해제한 뒤 포함된 `Setup.exe`를 실행합니다.
 
+기존 공유폴더 업데이트 방식의 구버전은 배포 폴더의 `latest.ini`와 버전 EXE를 `지점공용\App Update`에 복사해 전환할 수 있습니다. 구버전이 EXE를 교체한 뒤 새 앱이 내장 설치 프로그램을 실행하여 정식 설치 구조로 마이그레이션합니다.
+
+브리지용 `latest.ini`는 앱 버전 V1.7.6을 유지하면서 기존 V1.7.6 테스트 설치본에도 다시 배포되도록 판정 리비전 `V1.7.6.1`을 사용합니다.
+
 ## 자동 릴리즈 업로드
 
 이 저장소는 GitHub Actions를 사용해 배포 zip을 자동으로 GitHub Release에 업로드합니다.
@@ -69,7 +73,7 @@ zip 파일을 내려받아 압축을 해제한 뒤 `Setup.exe`를 실행하면 �
 빌드:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.5\source\build.ps1"
+powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.6\source\build.ps1"
 ```
 
 빌드 결과:
@@ -81,10 +85,14 @@ powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.5\source\build.ps1"
 
 ## 현재 버전
 
-현재 최신 버전은 `V1.7.5`입니다.
+현재 최신 버전은 `V1.7.6`입니다.
 
 주요 변경:
 
-- GitHub Release asset 탐색 로직 개선
-- Release 제목과 asset 파일명 차이로 업데이트를 찾지 못하던 문제 수정
-- GitHub Releases 기반 자동 업데이트 구조 안정화
+- 관리자 부서 연결 시 별도의 앱 내부 인증 단계 제거
+- 최초 관리자 비밀번호는 `보안 설정` 진입 시에만 설정
+- 최초 비밀번호 설정 직후 보안 설정 화면으로 바로 진입
+- 재설치 전 실행 중인 SMB Manager를 종료해 잠긴 파일 교체 실패 방지
+- 제거 전 실행 중인 앱을 종료해 설치 폴더 접근 거부 오류 방지
+- 이전 제거 실패로 실행 파일만 남은 설치 경로도 다시 인식해 정리
+- 공유폴더 구버전이 EXE만 교체해도 새 앱 첫 실행 시 정식 설치 프로그램으로 자동 전환
