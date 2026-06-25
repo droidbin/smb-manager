@@ -46,7 +46,7 @@ zip 파일을 내려받아 압축을 해제한 뒤 `Setup.exe`를 실행하면 �
 
 기존 공유폴더 업데이트 방식의 구버전은 배포 폴더의 `latest.ini`와 버전 EXE를 `지점공용\App Update`에 복사해 전환할 수 있습니다. 구버전이 EXE를 교체한 뒤 새 앱이 내장 설치 프로그램을 실행하여 정식 설치 구조로 마이그레이션합니다.
 
-브리지용 `latest.ini`는 앱 버전 V1.7.6을 유지하면서 기존 V1.7.6 테스트 설치본에도 다시 배포되도록 판정 리비전 `V1.7.6.1`을 사용합니다.
+브리지용 `latest.ini`는 정식 앱 버전과 같은 값을 사용합니다. 새 버전 배포 시 `latest.ini`와 같은 버전의 EXE 파일을 함께 복사합니다.
 
 ## 자동 릴리즈 업로드
 
@@ -73,7 +73,7 @@ zip 파일을 내려받아 압축을 해제한 뒤 `Setup.exe`를 실행하면 �
 빌드:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.6\source\build.ps1"
+powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.7\source\build.ps1"
 ```
 
 빌드 결과:
@@ -85,7 +85,7 @@ powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.6\source\build.ps1"
 
 ## 현재 버전
 
-현재 최신 버전은 `V1.7.6`입니다.
+현재 최신 버전은 `V1.7.7`입니다.
 
 주요 변경:
 
@@ -96,3 +96,5 @@ powershell -ExecutionPolicy Bypass -File ".\SMB Manager V1.7.6\source\build.ps1"
 - 제거 전 실행 중인 앱을 종료해 설치 폴더 접근 거부 오류 방지
 - 이전 제거 실패로 실행 파일만 남은 설치 경로도 다시 인식해 정리
 - 공유폴더 구버전이 EXE만 교체해도 새 앱 첫 실행 시 정식 설치 프로그램으로 자동 전환
+- Windows 시작 시 저장된 비밀번호로 업무폴더를 자동 재연결
+- 설치 프로그램에서 시작프로그램 등록 옵션 기본 활성화
